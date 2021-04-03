@@ -3,12 +3,34 @@ package com.joyce05;
 import com.joyce.utils.DataSourceUtils;
 import com.joyce05.handler.BeanHandler;
 import com.joyce05.domain.Student;
+import com.joyce05.handler.BeanListHandler;
+import com.joyce05.handler.ScalarHandler;
 import org.junit.Test;
+
+import java.util.List;
 
 // stimulate DAO
 public class JDBCTemplateTest1 {
 
     private JDBCTemplate template = new JDBCTemplate(DataSourceUtils.getDataSource());
+
+    @Test
+    public void queryForScalar(){
+        // check row number
+        String str = "Select COUNT(*) from student";
+        Long value=template.queryForScalar(str, new ScalarHandler<Long>());
+        System.out.println(value);
+    }
+
+    @Test
+    public void queryForList(){
+        // check all students in student list
+        String sql = "Select * from student";
+        List<Student> list = template.queryForList(sql, new BeanListHandler<>(Student.class));
+        for(Student s : list){
+            System.out.println(s);
+        }
+    }
 
     @Test
     public void queryForObject(){
